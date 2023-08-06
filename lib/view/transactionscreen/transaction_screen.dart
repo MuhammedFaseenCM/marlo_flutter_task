@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:marlo_flutter_task/controller/provider/home_provider.dart';
 import 'package:marlo_flutter_task/controller/provider/search_provider.dart';
+import 'package:marlo_flutter_task/view/homescreen/widgets/loading_listview.dart';
+import 'package:marlo_flutter_task/view/homescreen/widgets/transaction_list_widget.dart';
 import 'package:marlo_flutter_task/view/mainscreen/widgets/constants.dart';
 import 'package:marlo_flutter_task/view/mainscreen/widgets/custom_color.dart';
-import 'package:marlo_flutter_task/view/mainscreen/widgets/string_const.dart';
 import 'package:marlo_flutter_task/view/transactionscreen/widgets/bottom_sheet.dart';
+import 'package:marlo_flutter_task/view/transactionscreen/widgets/button_widget.dart';
+import 'package:marlo_flutter_task/view/transactionscreen/widgets/empty_screen.dart';
+import 'package:marlo_flutter_task/view/transactionscreen/widgets/filtered_details_container.dart';
 import 'package:provider/provider.dart';
 
 class TransactionScreen extends StatelessWidget {
@@ -40,7 +45,6 @@ class TransactionScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12.0)),
                       child: TextFormField(
                         controller: searchProvider.searchController,
-                        
                         onChanged: (value) {
                           searchProvider.updateSearchText();
                         },
@@ -69,38 +73,29 @@ class TransactionScreen extends StatelessWidget {
               );
             }),
             kHeight30,
+            FilteredDetailContainer(),
             Expanded(
-              child: Consumer<SearchProvider>(builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.filteredTitles.isEmpty
-                      ? title.length
-                      : value.filteredTitles.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                        color: kWhite,
-                        child: ListTile(
-                          title: Text(
-                            value.filteredTitles.isEmpty
-                                ? title[index]
-                                : value.filteredTitles[index],
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle:
-                              const Text("Sat \u00B7 16 Jul \u00B7 9.00 pm"),
-                          leading: Container(
-                            width: 45.0,
-                            height: 45.0,
-                            decoration: BoxDecoration(
-                                color: kBlueGreen,
-                                borderRadius: BorderRadius.circular(10.0)),
-                            child: const Icon(
-                              Icons.arrow_outward,
-                              color: kWhite,
-                            ),
-                          ),
-                        ));
-                  },
-                );
+              child: Consumer2<SearchProvider, HomeProvider>(
+                  builder: (context, searchProvider, homeProvider, _) {
+                return homeProvider.transactionList.isEmpty
+                    ? const LoadingListView(
+                        itemCount: 6,
+                      )
+                    : homeProvider.selectedMoney[0] ||
+                            homeProvider.selectedMoney[1]
+                        ? homeProvider.filteredList.isEmpty
+                            ? const EmptyScreen()
+                            : ListViewWidget(
+                                transactionList:
+                                    homeProvider.filteredList.isEmpty
+                                        ? homeProvider.transactionList
+                                        : homeProvider.filteredList,
+                                isTranScreen: true)
+                        : ListViewWidget(
+                            transactionList: homeProvider.filteredList.isEmpty
+                                ? homeProvider.transactionList
+                                : homeProvider.filteredList,
+                            isTranScreen: true);
               }),
             )
           ],
@@ -109,6 +104,3 @@ class TransactionScreen extends StatelessWidget {
     );
   }
 }
-
-
-//  showSearch(context: context, delegate: TitleSearch());

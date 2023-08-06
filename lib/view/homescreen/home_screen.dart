@@ -3,6 +3,7 @@ import 'package:marlo_flutter_task/controller/provider/home_provider.dart';
 import 'package:marlo_flutter_task/view/homescreen/widgets/country_container.dart';
 import 'package:marlo_flutter_task/view/homescreen/widgets/loading_listview.dart';
 import 'package:marlo_flutter_task/view/homescreen/widgets/todo_container.dart';
+import 'package:marlo_flutter_task/view/homescreen/widgets/transaction_list_widget.dart';
 import 'package:marlo_flutter_task/view/mainscreen/widgets/constants.dart';
 import 'package:marlo_flutter_task/view/mainscreen/widgets/custom_color.dart';
 import 'package:marlo_flutter_task/view/transactionscreen/transaction_screen.dart';
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      refreshScreen(context);
+         refreshScreen(context);
     });
     return RefreshIndicator(
       onRefresh: () {
@@ -107,42 +108,8 @@ class HomeScreen extends StatelessWidget {
                           ? const LoadingListView(
                               itemCount: 6,
                             )
-                          : ListView.builder(
-                              itemCount: value.transactionList.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                    child: ListTile(
-                                  title: const Text(
-                                    "Rent",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: const Text(
-                                      "Sat \u00B7 16 Jul \u00B7 9.00 pm"),
-                                  leading: Container(
-                                    width: 45.0,
-                                    height: 45.0,
-                                    decoration: BoxDecoration(
-                                        color: kBlueGreen,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    child: const Icon(
-                                      Icons.arrow_outward,
-                                      color: kWhite,
-                                    ),
-                                  ),
-                                  trailing: Text(
-                                    "\$${value.transactionList[index].amount}",
-                                    style: TextStyle(
-                                        color: value.transactionList[index]
-                                                .amount[0]
-                                                .contains("-")
-                                            ? kBlack
-                                            : kGreen),
-                                  ),
-                                ));
-                              },
-                            );
+                          : ListViewWidget(
+                              transactionList: value.transactionList);
                     },
                   ),
                 ),

@@ -19,7 +19,7 @@ class GetAuthTokenModel {
     required this.expiresIn,
   });
 
-  factory GetAuthTokenModel.fromJson(Map<String, dynamic> json) {
+  factory GetAuthTokenModel.fromJson( json) {
     return GetAuthTokenModel(
       kind: json['kind'],
       localId: json['localId'],

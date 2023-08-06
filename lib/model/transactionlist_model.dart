@@ -11,7 +11,7 @@ class TransactionData {
     required this.data,
   });
 
-  factory TransactionData.fromJson(Map<String, dynamic> json) {
+  factory TransactionData.fromJson(json) {
     return TransactionData(
       errorFlag: json['error_flag']??"",
       message: json['message']??"",
